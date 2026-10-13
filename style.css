@@ -1,0 +1,301 @@
+.projects {
+    margin: 1rem 2.1rem;
+    padding-top: 60px;
+}
+
+.projects-subtext {
+    color: #94a3b8; /* A slightly lighter, muted slate color */
+    font-size: 1.1rem;
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+/* PROJECT DECK */
+.deck-area {
+    text-align: center;
+    padding: 2rem 0 3rem;
+}
+
+.deck-hint {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.deck-wrapper {
+    position: relative;
+    width: min(100%, 560px);
+    height: 320px;
+    margin: 0 auto;
+    cursor: pointer;
+    isolation: isolate;
+    outline-offset: 8px;
+}
+
+/* Every card occupies the SAME central position. */
+.stack-card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(82%, 400px);
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #fff;
+    border: 3px solid #fff;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+
+    transform:
+        translate(-50%, -50%)
+        rotate(calc((var(--index) - 2) * 2deg))
+        translate(
+            calc((var(--index) - 2) * 10px), /* "10px" was previouly "3px" */
+            calc((var(--index) - 2) * -3px)
+        );
+
+    z-index: var(--index);
+    transform-origin: center;
+    transition:
+        transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+        box-shadow 0.3s ease;
+    will-change: transform;
+}
+
+.stack-card img {
+    display: block;
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+
+.card-label {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 1rem;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: left;
+    background: linear-gradient(transparent, rgba(10, 25, 47, 0.9));
+}
+
+/* Slight lift when hovering over the deck. */
+.deck-area.stacked .deck-wrapper:hover .stack-card { box-shadow: 0 18px 45px rgba(0, 0, 0, 0.4); }
+
+.deck-area.stacked .deck-wrapper:hover .stack-card:first-child { transform: translate(-50%, -50%) rotate(-7deg) translateY(-5px); }
+
+/* Scatter the deck outward */
+.deck-area.scattering .stack-card {
+    pointer-events: none;
+    animation: scatterCard 0.85s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+    animation-delay: calc(var(--index) * 100ms);
+}
+
+/* Each card gets its own destination */
+.stack-card:nth-child(1) {
+    --scatter-x: -240px;
+    --scatter-y: -100px;
+    --scatter-rotation: -18deg;
+}
+
+.stack-card:nth-child(2) {
+    --scatter-x: 220px;
+    --scatter-y: -90px;
+    --scatter-rotation: 15deg;
+}
+
+.stack-card:nth-child(3) {
+    --scatter-x: -250px;
+    --scatter-y: 130px;
+    --scatter-rotation: -12deg;
+}
+
+.stack-card:nth-child(4) {
+    --scatter-x: 240px;
+    --scatter-y: 150px;
+    --scatter-rotation: 20deg;
+}
+
+.stack-card:nth-child(5) {
+    --scatter-x: 0px;
+    --scatter-y: 230px;
+    --scatter-rotation: 8deg;
+}
+
+@keyframes scatterCard {
+    0% {
+        opacity: 1;
+        transform:
+            translate(-50%, -50%)
+            rotate(calc((var(--index) - 2) * 2deg))
+            translate(
+                calc((var(--index) - 2) * 10px),
+                calc((var(--index) - 2) * -3px)
+            )
+            scale(1);
+    }
+
+    45% {
+        opacity: 1;
+        transform:
+            translate(
+                calc(-50% + var(--scatter-x) * 0.45),
+                calc(-50% + var(--scatter-y) * 0.45)
+            )
+            rotate(calc(var(--scatter-rotation) * 0.65))
+            scale(1.04);
+    }
+
+    100% {
+        opacity: 0;
+        transform:
+            translate(
+                calc(-50% + var(--scatter-x)),
+                calc(-50% + var(--scatter-y))
+            )
+            rotate(var(--scatter-rotation))
+            scale(0.82);
+    }
+}
+
+/* Reveal grid cards in sequence. */
+.project-card-reveal {
+    opacity: 0;
+    animation: revealProject 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--index) * 120ms);
+}
+
+@keyframes revealProject {
+    from {
+        opacity: 0;
+        transform: translateY(35px) scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.stack-again-btn {
+    display: block;
+    margin: 2rem auto;
+    padding: 0.7rem 1.2rem;
+    border: 1px solid #4169e1;
+    border-radius: 8px;
+    color: #fff;
+    background: #1c2a5e;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.stack-again-btn:hover {
+    background: #4169e1;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 992px) {
+    .all-projects-grids {
+        grid-template-columns: repeat(2, 1fr); 
+        margin: 0;
+    }
+
+    .projects-subtext {
+        margin: 1em 0;
+        font-size: 14px;
+        letter-spacing: .8px;
+    }
+
+    /* .projects { margin: 1rem 3rem; } */
+}
+
+@media (max-width: 600px) {
+    .deck-wrapper { height: 240px; }
+
+    .stack-card { width: 85%; }
+
+    .all-projects-grids { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Respect visitors who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+    .stack-card, .project-card, .stack-again-btn { transition: none; }
+
+    .deck-area.scattering .stack-card, .project-card-reveal {
+        animation-duration: 0.01ms;
+        animation-delay: 0ms;
+    }
+}
+
+.all-projects-grids {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2em; /* cleaner spacing */
+    margin: 1em;
+}
+
+.project-card {
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    border-radius: 7px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #0a192f;
+    /* min-width: 0; */
+    text-decoration: none;
+}
+
+.project-card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); 
+}
+
+.project-details h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+}
+
+.project-card img {
+    width: 100%;
+    /* border-bottom: 1px solid #000;
+    object-fit: cover; */
+    display: block;
+    /* border-bottom: 4px solid #1e90ff; */
+}
+
+.project-details {
+    padding: 1em;
+    margin-top: 20px;
+    /* cursor: pointer; */
+}
+
+.project-details p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.used-langs-container {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem; /* instead of margin-right for cleaner spacing */
+}
+
+.used-langs {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid #000;
+    /* or background "#ccc" without border */
+    padding: 0.5em 0.75em;
+    border-radius: 7px;
+    font-size: 0.9rem;
+    width: fit-content;
+}
+
+.project-details .cta-button { margin-top: 10px; }
+
+@media(max-width: 805px) {
+    .all-projects-grids { grid-template-columns: 1fr; }
+}
+
+@media screen and (max-width: 600px) {
+    .about, .projects { margin: 0 2rem; }
+}
